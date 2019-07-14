@@ -52,6 +52,7 @@
                 data: {"ward_id":ward_id},
                 success: function (data) {
                     alert(data.msg)
+                    window.location.reload()
                 }
             }
         )
@@ -62,6 +63,7 @@
                 url: /add_ward/,
                 success: function (data) {
                     alert(data.msg)
+                    window.location.reload()
                 }
             }
         )
@@ -88,6 +90,7 @@
                             t[i].children[0].setAttribute("readonly","readonly")
                         }
                         btn.text("编辑")
+                        window.location.reload()
                     }
                 }
             )
