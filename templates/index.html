@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+</head>
+<body>
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ward_id</th>
+                <th>equit_id</th>
+                <th>start_date</th>
+                <th>state</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ward in ward_list %}
+            <tr>
+                <td><input readonly="readonly" value="{{ ward.ward_id }}" class="form-control"></td>
+                <td><input readonly="readonly" value="{{ ward.equit_id }}" class="form-control"></td>
+                <td><input readonly="readonly" value="{{ ward.start_date|date:"Y-m-d" }}" class="form-control"></td>
+                <td><input readonly="readonly" value="{{ ward.state }}" class="form-control"></td>
+                <td><button name="update_button" class="btn btn-link">编辑</button></td>
+                <td><button name="del_button" class="btn btn-link" id="{{ ward.ward_id }}">删除</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <button id="add_ward" class="btn btn-info">插入ward</button>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+<script>
+    $('[name = del_button]').click(function () {
+        ward_id = $(this).attr("id")
+        $.ajax(
+            {
+                url: /del_ward/,
+                data: {"ward_id":ward_id},
+                success: function (data) {
+                    alert(data.msg)
+                }
+            }
+        )
+    })
+    $('#add_ward').click(function () {
+        $.ajax(
+            {
+                url: /add_ward/,
+                success: function (data) {
+                    alert(data.msg)
+                }
+            }
+        )
+    })
+    $('[name = update_button]').click(function () {
+        if($(this).text() == '保存')
+        {
+            ward_id = $(this).parent().parent().children().children()[0].value
+            equit_id = $(this).parent().parent().children().children()[1].value
+            start_date = $(this).parent().parent().children().children()[2].value
+            state = $(this).parent().parent().children().children()[3].value
+            var btn = $(this)
+            $.ajax(
+                {
+                    url: /update_ward/,
+                    type: "POST",
+                    data: JSON.stringify({"ward_id":ward_id,"equit_id":equit_id,
+                        "start_date":start_date,"state":state}),
+                    success: function (data) {
+                        alert(data.msg)
+                        var t = btn.parent().parent().children()
+                        for (var i=0;i<4;i++)
+                        {
+                            t[i].children[0].setAttribute("readonly","readonly")
+                        }
+                        btn.text("编辑")
+                    }
+                }
+            )
+        }else
+        {
+            $(this).text("保存")
+            var t = $(this).parent().parent().children()
+            for (var i=0;i<4;i++)
+            {
+                t[i].children[0].removeAttribute("readonly")
+            }
+        }
+
+    })
+</script>
+</body>
+</html>

@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from part1.views import hello
+from part2.views import *
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('index/',hello),
+    path('ward/',ini_ward),
+    path('add_ward/',add_ward),
+    path('del_ward/',del_ward),
+    path('update_ward/',update_ward),
 ]
