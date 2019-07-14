@@ -22,6 +22,7 @@
             </tr>
         </thead>
         <tbody>
+        {% comment %}使用{%  %}的格式在页面中插入python代码{% endcomment %}
         {% for ward in ward_list %}
             <tr>
                 <td><input readonly="readonly" value="{{ ward.ward_id }}" class="form-control"></td>
