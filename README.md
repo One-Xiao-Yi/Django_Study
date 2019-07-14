@@ -167,3 +167,4 @@ Django-配置、连接数
                 <td><button name="del_button" class="btn btn-link" id="{{ ward.ward_id }}">删除</button></td>
             </tr>
 	{% endfor %}
+### 至此part2结束
