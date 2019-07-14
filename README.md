@@ -1,6 +1,7 @@
-# Django_part1  
+# Django_Study
 Django-配置、连接数  
 使用Pycharm开发  
+## part 1 项目搭建、访问数据库
 ### 1.新建Django项目  
 ### 2.打开设置，在peoject->Interpreter添加包PyMySQL（python3）、mysqlclient  
 ### 3.在init.py编写代码 
@@ -114,3 +115,55 @@ Django-配置、连接数
     return HttpResponse("<p>删除成功</p>")
 	
 ### 完成搭建和对数据库的访问
+
+## part 2 添加静态资源、完成基础CURD操作  
+### 1.创建模块part2
+### 2.像part1一样在settings中添加psert2、编写models.py
+### 3.新建文件夹static，用于添加静态资源
+### 4.在templates文件夹下新建html文件，编写用户界面
+### 5.在views.py下编写实现curd以及为用户界面提供初始数据
+
+	# 为用户界面提供初始数据
+	# render用于返回xml文件，三个参数中，第一个为请求，第二个为xml文件名，第三个为向该请求传递的数据
+	def ini_ward(request):
+    ward_list = Wards.objects.all()
+    return render(request,"index.html",{"ward_list":ward_list})
+
+	# 添加数据操作
+	# JsonResponse用于返回json格式数据
+	def add_ward(request):
+    ward = Wards()
+    ward.ward_id = 108
+    ward.equit_id = 108
+    ward.start_date = time.strftime("%Y-%m-%d",time.localtime())
+    ward.state = 'u'
+    ward.save()
+    return JsonResponse({'msg': "插入成功"})
+	
+	# 删除数据操作
+	def del_ward(request):
+    ward_id = request.GET.get("ward_id")
+    ward = Wards.objects.get(ward_id=ward_id)
+    ward.delete()
+    return JsonResponse({'msg': "删除成功"})
+	
+	# 更新数据操作
+	def update_ward(request):
+    ward = Wards(**json.loads(request.body))
+    ward.save()
+    return JsonResponse({'msg': '更新成功'})
+	
+### 6.编写用户界面，完成前端对后台的请求操作，本例使用bootstrap作为前端样式，ajax+jquary实现交互  
+在初始化用户界面时，对响应的数据进行展示，使用以下方式
+
+	{% comment %}使用{%  %}的格式在页面中插入python代码{% endcomment %}
+	{% for ward in ward_list %}
+            <tr>
+                <td><input readonly="readonly" value="{{ ward.ward_id }}" class="form-control"></td>
+                <td><input readonly="readonly" value="{{ ward.equit_id }}" class="form-control"></td>
+                <td><input readonly="readonly" value="{{ ward.start_date|date:"Y-m-d" }}" class="form-control"></td>
+                <td><input readonly="readonly" value="{{ ward.state }}" class="form-control"></td>
+                <td><button name="update_button" class="btn btn-link">编辑</button></td>
+                <td><button name="del_button" class="btn btn-link" id="{{ ward.ward_id }}">删除</button></td>
+            </tr>
+	{% endfor %}
